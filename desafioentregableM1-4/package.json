@@ -1,0 +1,15 @@
+{
+  "name": "desafioentregablem1-4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ProductManager.js",
+  "scripts": {
+    "dev": "nodemon ./ProductManager.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
