@@ -36,9 +36,13 @@ class ProductManager {
                 }
             }
 
-    validProduct(product) {
-        return !this.products.find(pr => product.code === pr.code) && product.title && product.description && product.price && product.thumbnail && product.stock
-    }
+            validProduct(product) {
+
+                const productos = JSON.parse(fs.readFileSync(this.path, 'utf-8'))
+                
+                return !productos.find(producto => producto.code === product.code) && product.title && product.description && product.price && product.thumbnail && product.stock
+                
+                }
 
     generateId() {
         return this.products.length +1;
@@ -109,16 +113,8 @@ productManager.addProduct({
 allProducts = productManager.getProduct()
 console.log(allProducts)
 
-// productManager.addProduct({
-//     title: 'producto prueba',
-//     description:'Este es un producto prueba',
-//     price:'200',
-//     thumbnail:'Sin imagen',
-//     code:'abc123',
-//     stock:25
-// })
+console.log('finding product by correct id:', productManager.getProductById(1))
+productManager.getProductById(40)
 
-// allProducts = productManager.getProduct()
-
-// console.log('finding product by correct id:', productManager.getProductById(1))
-// productManager.getProductById(40)
+productManager.updateProduct(1, "description", 'La descripcion de este producto ha cambiado' )
+productManager.deleteProduct(1)
