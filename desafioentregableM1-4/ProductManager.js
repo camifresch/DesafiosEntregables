@@ -12,7 +12,7 @@ class ProductManager {
         console.log("File content: ", data);
     }
 
-    addProduct(product) {
+    async addProduct(product) {
         if (this.validProduct(product)) {
             const newProduct = {
                 title: product.title,
@@ -23,8 +23,8 @@ class ProductManager {
                 stock: product.stock,
                 id: this.generateId()
         }
-         const contenido = this.products.push(newProduct)
-         fs.writeFile(this.path, JSON.stringify(this.products), (error) => {
+         const contenido = await this.products.push(newProduct)
+         await fs.writeFile(this.path, JSON.stringify(this.products), (error) => {
             if(error) {
                 console.log('Ocurrio un error durante la escritura:', error.message)
                 } else {
