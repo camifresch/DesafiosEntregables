@@ -4,7 +4,7 @@ class ProductManager {
     constructor () {
     this.products = [];
     this.id = 0;
-    this.path = './productsList.JSON';
+    this.path = './productsList.txt';
     }
 
     async getProduct() {
@@ -65,7 +65,7 @@ class ProductManager {
         const product = JSON.parse(data);
 
         const index = product.findIndex(product => product.id === productId);
-        if(!index) {
+        if(index === -1) {
             console.log("Error: producto no encontrado")
         } else {
             product[index][field] = updateData;
@@ -114,8 +114,19 @@ productManager.addProduct({
 allProducts = productManager.getProduct()
 console.log(allProducts)
 
+productManager.addProduct({
+    title: 'producto prueba2',
+    description:'Este es un producto prueba2',
+    price:'200',
+    thumbnail:'Sin imagen',
+    code:'abc321',
+    stock:25
+})
+
+allProducts = productManager.getProduct()
+console.log(allProducts)
+
 console.log('finding product by correct id:', productManager.getProductById(1))
 productManager.getProductById(40)
-
 productManager.updateProduct(1, "description", 'La descripcion de este producto ha cambiado' )
-productManager.deleteProduct(1)
+productManager.deleteProduct(2)
