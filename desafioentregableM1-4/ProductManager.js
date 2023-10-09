@@ -61,7 +61,7 @@ class ProductManager {
         }
 
     async updateProduct(productId, field, updateData) {
-        const data = await fs.promises.writeFile(this.path, 'utf-8')
+        const data = await fs.promises.readFile(this.path, 'utf-8')
         const product = JSON.parse(data);
 
         const index = product.findIndex(product => product.id === productId);
@@ -81,12 +81,13 @@ class ProductManager {
         const data = await fs.promises.readFile(this.path, 'utf-8')
         const product = JSON.parse(data)
 
-        const deleteProductFilter = product.find( product => product.id === deleteById);
+        const deleteProductFilter = product.filter(product => product.id !== deleteById);
+
         if (!deleteProductFilter) {
             console.log('Error: No se encontró producto con ID ${deleteById}');
             return;
         } else {
-            fs.promises.writeFile(this.path, JSON.stringify(deleteProductFilter), err => {
+            fs.writeFile(this.path, JSON.stringify(deleteProductFilter), err => {
                 if (err) throw err;
             console.log('Producto ${deleteById} borrado con éxito');
             })
