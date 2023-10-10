@@ -2,9 +2,9 @@ const fs = require('fs');
 
 class ProductManager {
     constructor () {
-    this.products = [];
-    this.id = 0;
-    this.path = './productsList.txt';
+        this.products = [];
+        this.id = 1;
+        this.path = './productsList.JSON';
     }
 
     async getProduct() {
@@ -12,7 +12,7 @@ class ProductManager {
         console.log("File content: ", data);
     }
 
-    async addProduct(product) {
+    addProduct(product) {
         if (this.validProduct(product)) {
             const newProduct = {
                 title: product.title,
@@ -23,8 +23,8 @@ class ProductManager {
                 stock: product.stock,
                 id: this.generateId()
         }
-         const contenido = await this.products.push(newProduct)
-         await fs.writeFile(this.path, JSON.stringify(this.products), (error) => {
+         const contenido = this.products.push(newProduct)
+        fs.writeFile(this.path, JSON.stringify(this.products), (error) => {
             if(error) {
                 console.log('Ocurrio un error durante la escritura:', error.message)
                 } else {
@@ -36,11 +36,12 @@ class ProductManager {
                 }
             }
 
-            validProduct(product) {
-
-                const productos = JSON.parse(fs.readFileSync(this.path, 'utf-8'))
+            async validProduct(product) {
                 
-                return !productos.find(producto => producto.code === product.code) && product.title && product.description && product.price && product.thumbnail && product.stock
+                const data = await fs.promises.readFile(this.path, 'utf-8')
+                const productos = JSON.parse(data);
+                
+                return !productos.find(producto => producto.code === product.code) || product.title || product.description || product.price || product.thumbnail || product.stock
                 
                 }
 
@@ -67,14 +68,13 @@ class ProductManager {
         const index = product.findIndex(product => product.id === productId);
         if(index === -1) {
             console.log("Error: producto no encontrado")
-        } else {
+        }
             product[index][field] = updateData;
 
-            fs.writeFile(this.path, JSON.stringify(product), error => {
-                if (error) throw error;
+        fs.writeFile(this.path, JSON.stringify(product), err => {
+                if (err) throw err;
                 console.log("Producto actualizado con exito")
             })
-        }
     }
 
     async deleteProduct(deleteById) {
@@ -86,22 +86,17 @@ class ProductManager {
         if (!deleteProductFilter) {
             console.log('Error: No se encontró producto con ID ${deleteById}');
             return;
-        } else {
+        }
             fs.writeFile(this.path, JSON.stringify(deleteProductFilter), err => {
                 if (err) throw err;
             console.log('Producto ${deleteById} borrado con éxito');
             })
-        }
     }
 }
 
 // testing
 
 let productManager = new ProductManager()
-
-let allProducts = productManager.getProduct()
-console.log(allProducts)
-
 productManager.addProduct({
     title: 'producto prueba',
     description:'Este es un producto prueba',
@@ -110,9 +105,6 @@ productManager.addProduct({
     code:'abc123',
     stock:25
 })
-
-allProducts = productManager.getProduct()
-console.log(allProducts)
 
 productManager.addProduct({
     title: 'producto prueba2',
@@ -123,10 +115,19 @@ productManager.addProduct({
     stock:25
 })
 
+productManager.addProduct({
+    title: 'producto prueba3',
+    description:'Este es un producto prueba3',
+    price:'200',
+    thumbnail:'Sin imagen',
+    code:'abc231',
+    stock:25
+})
+
 allProducts = productManager.getProduct()
 console.log(allProducts)
 
-console.log('finding product by correct id:', productManager.getProductById(1))
-productManager.getProductById(40)
-productManager.updateProduct(1, "description", 'La descripcion de este producto ha cambiado' )
-productManager.deleteProduct(2)
+// console.log('finding product by correct id:', productManager.getProductById(1))
+// productManager.getProductById(40)
+// productManager.updateProduct(1, "description", 'La descripcion de este producto ha cambiado' )
+// productManager.deleteProduct(2)
