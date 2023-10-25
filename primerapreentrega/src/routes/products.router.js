@@ -29,26 +29,24 @@ router.get('/products/:id', async (req, res) => {
     }
 });
 
-// router.post('/products', async (req, res) => {
-//     const { body } = req;
-//     const newProd = {
-//       id: this.latestId.length + 1,
-//       ...body,
-//     };
-//     manager.addProduct(newProd);
-//     res.status(201).json(newProd);
+router.post('/products', async (req, res) => {
+    const { title, description, price, code, stock } = req.body;
+    const newProd = manager.addProduct(title, description, price, code, stock);
+    return res.status(201).json(newProd);
 
-// });
+});
 
 router.put("/:pid", async (req, res) =>{
     let id = req.params.pid
     let updateProduct = req.body
-    res.send(await getProducts.updateProduct(id, updateProduct))
+    const product= await manager.updateProduct(id, updateProduct)
+    return res.json(product)
 })
   
 router.delete("/:pid", async (req, res) =>{
     let id = req.params.pid
-    res.send(await getProducts.deleteProducts(id))
+    const respuesta = await manager.deleteProduct(id)
+    return res.json(respuesta)
 })
 
 module.exports = router;

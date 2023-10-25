@@ -2,13 +2,13 @@ const fs = require('fs');
 
 class ProductManager {
     constructor () {
-        this.products = [];
-        this.latestId = 1;
+        this.products = JSON.parse(fs.readFileSync('./productsList.json', 'utf-8'));
+        this.latestId = JSON.parse(fs.readFileSync('./productsList.json', 'utf-8')).pop().id;;
         this.path = './productsList.json';
     }
 
 
-    addProduct (title, description, price, code, stock) {
+    addProduct (title, description, price, code, stock, thumbnail) {
         if (!title || !description || !price || !code || !stock) {
             console.log("Error: todos los campos son obligatorios");
             return; 
@@ -28,7 +28,7 @@ class ProductManager {
         title: title,
         description: description,
         price: price,
-        thumbnail: thumbnail,
+        thumbnail: thumbnail? thumbnail: "",
         code: code,
         stock: stock,
         id: ++ this.latestId
@@ -36,10 +36,11 @@ class ProductManager {
 
     this.products.push (newproduct);
     console.log("Producto agregado con éxito");
-        fs.writeFile(this.path, JSON.stringify(this.products), (err) => {
+        fs.writeFileSync(this.path, JSON.stringify(this.products), (err) => {
             if (err) throw err;
             console.log('Archivo guardado con éxito');
         });
+        return "Archivo guardado con exito"
         
     }
 
@@ -72,24 +73,25 @@ class ProductManager {
         const data = await fs.promises.readFile(this.path, 'utf-8');
         const products = JSON.parse(data);
         
-        const index = products.findIndex(product => product.id === productId);
+        const index = products.findIndex(product => product.id == productId);
         if (index === -1) {
             console.log('Error: producto no encontrado');
             return;
         }
-        products[index][field] = updateData;
+        products[index] = {...products[index],...updateData};
 
         fs.writeFile(this.path, JSON.stringify(products), err => {
             if (err) throw err;
             console.log('Producto actualizado con éxito desde updateProduct')
         });
+        return products[index]
     }
 
     async deleteProduct (deleteById){
         const data = await fs.promises.readFile(this.path, 'utf-8');
         const products = JSON.parse(data);
 
-        const deleteItemFilter = products.filter(product => product.id !== deleteById);
+        const deleteItemFilter = products.filter(product => product.id != deleteById);
 
         if (deleteItemFilter.length === products.length) {
             console.log('Error: No se encontró producto con ID ${deleteById}');
@@ -100,6 +102,8 @@ class ProductManager {
             if (err) throw err;
             console.log('Producto borrado con éxito desde deleteProduct');
         });
+
+        return {msg: "Producto borrado con exito desde deleteProduct"}
         
     }
 
