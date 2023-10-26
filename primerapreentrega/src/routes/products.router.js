@@ -1,11 +1,12 @@
-const { Router } = require('express');
-const { ProductManager } = require('../ProductManager.js')
+import { Router } from 'express';
+import ProductManager from '../ProductManager.js';
 
-const router = Router()
+
+const productsRouter = Router()
 const manager = new ProductManager();
 const getProducts = manager.getProducts();
 
-router.get('/products', async (req, res) => {
+productsRouter.get('/products', async (req, res) => {
     let limit = parseInt(req.query.limit);
     if (!limit) return res.send(await getProducts);
 
@@ -14,7 +15,7 @@ router.get('/products', async (req, res) => {
     res.send(productLimit);
 });
 
-router.get('/products/:id', async (req, res) => {
+productsRouter.get('/products/:id', async (req, res) => {
     let id = parseInt(req.params.id);
     let allProducts = await getProducts;
     let productById = allProducts.find(product => product.id === id);
@@ -29,24 +30,24 @@ router.get('/products/:id', async (req, res) => {
     }
 });
 
-router.post('/products', async (req, res) => {
+productsRouter.post('/products', async (req, res) => {
     const { title, description, price, code, stock } = req.body;
     const newProd = manager.addProduct(title, description, price, code, stock);
     return res.status(201).json(newProd);
 
 });
 
-router.put("/:pid", async (req, res) =>{
+productsRouter.put("/:pid", async (req, res) =>{
     let id = req.params.pid
     let updateProduct = req.body
     const product= await manager.updateProduct(id, updateProduct)
     return res.json(product)
 })
   
-router.delete("/:pid", async (req, res) =>{
+productsRouter.delete("/:pid", async (req, res) =>{
     let id = req.params.pid
     const respuesta = await manager.deleteProduct(id)
     return res.json(respuesta)
 })
 
-module.exports = router;
+export default productsRouter

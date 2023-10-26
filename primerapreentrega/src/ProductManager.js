@@ -1,4 +1,5 @@
-const fs = require('fs');
+import fs from "fs"
+
 
 class ProductManager {
     constructor () {
@@ -69,7 +70,7 @@ class ProductManager {
         }
     } 
 
-    async updateProduct (productId, field, updateData) {
+    async updateProduct (productId, updateData) {
         const data = await fs.promises.readFile(this.path, 'utf-8');
         const products = JSON.parse(data);
         
@@ -110,4 +111,4 @@ class ProductManager {
 
 }
 
-module.exports = {ProductManager};
+export default ProductManager
