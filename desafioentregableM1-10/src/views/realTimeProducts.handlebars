@@ -1,6 +1,6 @@
 
 <h1>Nuevo Producto</h1>
-<form action="/realtimeproducts" method="post">
+<form action="/api/products" method="post">
 
   <!-- Grid -->
   <div class="grid">
@@ -28,7 +28,7 @@
 
     <label for="thumbnail">
       Thumbnail
-      <input type="file" id="thumbnail" name="thumbnail" placeholder="thumbnail" required>
+      <input type="file" id="thumbnail" name="thumbnail" placeholder="thumbnail">
     </label>
 
   </div>
@@ -52,3 +52,19 @@
   <button type="submit">Enviar</button>
 
 </form>
+
+<div>
+    <h1>Lista de Productos</h1>
+    {{#each products}}
+        <div><b>Producto con codigo*{{this.code}}</b></div>
+        <ul>
+            <li>{{this.title}}</li>
+            <li>{{this.description}}</li>
+            <li>Precio: ${{this.price}}</li>
+            <li>Stock: {{this.stock}}</li>
+        </ul>
+    {{/each}}
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/script.js"></script>
