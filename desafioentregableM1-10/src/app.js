@@ -13,7 +13,7 @@ const server = http.createServer(app);
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
-app.use("/", express.static(__dirname + "/public"))
+app.use("/", express.static(__dirname + "../public"))
 app.use('/api', productsRouter, cartRouter)
 app.use("/realtimeproducts", productsRouter)
 
@@ -35,7 +35,7 @@ app.get('/realtimeproducts',async (req, res) => {
 
 init(server)
 
-app.listen(PUERTO, () => {
+server.listen(PUERTO, () => {
     console.log(`Servidor express activo en puerto ${PUERTO}`);
 });
 
