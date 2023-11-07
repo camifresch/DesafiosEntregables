@@ -1,24 +1,25 @@
 import ProductManager from "./ProductManager.js"
+import fs from "fs"
 
 const productAll = new ProductManager
 
 class CartManager {
     constructor() {
-        this.path = "./src/models/carts.json"
+        this.path = "./carts.json"
     }
 
     readCarts = async () => {
-        let carts = await fs.readFile(this.path, "utf-8")
+        let carts = fs.readFileSync(this.path, {encoding: 'utf-8'})
         return JSON.parse(carts);
     }
 
     writeCarts = async (carts) => {
-        await fs.writeFile(this.path, JSON.stringify(carts));
+       fs.writeFileSync(this.path, JSON.stringify(carts));
     }
 
     exist = async (id) => {
         let carts = await this.readCarts();
-        return carts.find(cart => cart.id === id)
+        return carts.findIndex(cart => cart.id == id)
     }
 
     getCarts = async () => {
@@ -38,9 +39,12 @@ class CartManager {
         }
       }
 
-    addCarts = async () => {
+    addCarts = async (newcart) => {
         try {
-            return await cartsModel.create({ products: [] });
+          const cart = await this.readCarts()
+          await cart.push(newcart)
+          this.writeCarts(cart)
+          return newcart;
           } catch (err) {
             return {
               status: 500,
@@ -51,13 +55,14 @@ class CartManager {
 
     getCartsById = async (id) => {
         try {
-            const cart = await cartsModel.findById(id).lean().populate("products.pid");
-            return cart === null
+          const cart = await this.readCarts()
+          let cartById = await this.exist(id)
+            return !cart[cartById]
               ? {
                 status: 404,
                 error: `No se encontró el carrito con ID [${id}]`,
               }
-              : cart.products;
+              : cart[cartById];
           } catch (err) {
             return {
               status: 500,
@@ -68,25 +73,22 @@ class CartManager {
 
     addProductInCart = async (cartId, productId) =>{
         let cartById = await this.exist(cartId)
-        if(!cartById) return "Carrito no encontrado"
-        let productById = await productAll.exist(productId)
-        if(!cartById) return "Producto no encontrado"
+        if(cartById <0) return "Carrito no encontrado"
+        const cart = await this.readCarts()
+        let productById = await productAll.getProductById(productId)
+        if(!productById) return "Producto no encontrado"
         
         let cartAll = await this.readCarts()
-        let cartFilter = cartAll.filter(cart => cart.id != cartId)
-
-        if(cartById.products.some(prod => prod.id === productId)) {
-            let moreProductInCart = cartById.products.find((prod) => prod.id === productId)
+        if(cart[cartById].products.some(prod => prod.id == productId)) {
+            let moreProductInCart = cart[cartById].products.find((prod) => prod.id == productId)
             moreProductInCart.cantidad++;
-            let cartsConcat = [cartById, ...cartFilter]
-            await this.writeCarts(cartsConcat)
+            await this.writeCarts(cart)
             return "Producto Sumado al Carrito"
         }
 
-        cartById.products.push({id: productById.id, cantidad: 1})
+        cart[cartById].products.push({id: productById.id, cantidad: 1})
 
-        let cartsConcat = [cartById, ...cartFilter]
-        await this.writeCarts(cartsConcat)
+        await this.writeCarts(cart)
         return "Producto Agregado al Carrito"
     }
 }

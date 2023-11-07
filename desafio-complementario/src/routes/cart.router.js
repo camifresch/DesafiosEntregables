@@ -2,26 +2,26 @@ import CartManager from '../CartManager.js';
 import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 
-
 const cartRouter = Router()
 const carts = new CartManager();
 
-cartRouter.post('/carts', (req, res) => {
+cartRouter.post('/carts', async (req, res) => {
     const newCart = {
         id: uuid(),
         products: [],
     };
-    carts.push(newCart);
-    res.status(201).json(newCart)
+    const respo = await carts.addCarts(newCart);
+    res.status(201).json(respo)
 })
 
-cartRouter.get('/carts/:cid', (req, res) => {
-    res.send(carts.getCartsById(req.params.id));
+cartRouter.get('/carts/:cid', async (req, res) => {
+    const response = await carts.getCartsById(req.params.cid)
+    res.send(response);
 })
 
 cartRouter.post("/carts/:cid/products/:pid", async (req, res) => {
     const { cid, pid } = req.params;
-    const addResponse = await manager.addProductToCart(cid, pid);
+    const addResponse = await carts.addProductInCart(cid, pid);
   
     !addResponse.error
       ? res.send(addResponse)
