@@ -1,21 +1,34 @@
 (function () {
 
-let username
-
 const socket = io()
 
 document
     .getElementById('form-products')
     .addEventListener('submit', (event) => {
       event.preventDefault();
-      const input = document.getElementById('input');
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const price = document.getElementById('price').value;
+      const thumbnail = document.getElementById('thumbnail').value;
+      const code = document.getElementById('code').value;
+      const stock = document.getElementById('stock').value;
+
       const newProduct = {
-        username,             //aca no sabria que poner para que me actualice todos los campos del product
-        body: input.value,
+        title, 
+        description,
+        price,
+        thumbnail,
+        code,
+        stock
       };
+      console.log("newProduct", newProduct)
       socket.emit('new-product', newProduct);
-      input.value = '';
-      input.focus();
+      title=""
+      description=""
+      price=""
+      thumbnail=""
+      code=""
+      stock=""
     });
 
   socket.on('product-list', (products) => {
@@ -23,8 +36,16 @@ document
     const logProducts = document.getElementById('log-products');
     logProducts.innerText = '';
     products.forEach((prod) => {
+      console.log("prod",prod)
       const p = document.createElement('p');
-      p.innerText = `${prod.body}`;  
+      p.innerText = `
+      ${prod.title}
+      ${prod.description}
+      ${prod.price}
+      ${prod.thumbnail}
+      ${prod.code}
+      ${prod.stock  }
+      `
       logProducts.appendChild(p);
     });
   });

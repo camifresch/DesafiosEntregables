@@ -5,16 +5,17 @@ import ProductManager from './ProductManager.js';
 export const init = (httpServer) => {
     const socketServer = new Server(httpServer);
 
-    socketServer.on('connection', (socketClient) => {
+    socketServer.on('connection', async (socketClient) => {
         console.log(`Nuevo cliente socket conectado ${socketClient.id}🎊`)
 
         const productManager = new ProductManager()
-        const products = productManager.getProducts();
+        const products = await productManager.getProducts();
         socketClient.emit('product-list', products);
 
-        socketClient.on('new-product', (newProduct) => {
+        socketClient.on('new-product', async (newProduct) => {
+        const products = await productManager.getProducts();
         products.push(newProduct);
-        io.emit('update-products', products);
+        socketClient.emit('product-list', products);
     });
 
     });
