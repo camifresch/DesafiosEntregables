@@ -6,6 +6,8 @@ import { engine } from 'express-handlebars';
 import ProductManager from './ProductManager.js';
 import http from 'http';
 import { init } from './socket.js';
+import { initDb } from './db/mongoDB.js';
+import userRouter from './routes/users.router.js';
 
 const PUERTO = 8080
 const app = express()
@@ -14,7 +16,7 @@ const server = http.createServer(app);
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(__dirname + "../public"))
-app.use('/api', productsRouter, cartRouter)
+app.use('/api', productsRouter, cartRouter, userRouter)
 app.use("/realtimeproducts", productsRouter)
 
 app.engine("handlebars", engine())
@@ -34,6 +36,7 @@ app.get('/realtimeproducts',async (req, res) => {
   });
 
 init(server)
+await initDb()
 
 server.listen(PUERTO, () => {
     console.log(`Servidor express activo en puerto ${PUERTO}`);
