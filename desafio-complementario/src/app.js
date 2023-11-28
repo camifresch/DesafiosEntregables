@@ -8,6 +8,7 @@ import http from 'http';
 import { init } from './socket.js';
 import { initDb } from './db/mongoDB.js';
 import userRouter from './routes/users.router.js';
+import chatRouter from './routes/chat.router.js';
 
 const PUERTO = 8080
 const app = express()
@@ -18,6 +19,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(__dirname + "../public"))
 app.use('/api', productsRouter, cartRouter, userRouter)
 app.use("/realtimeproducts", productsRouter)
+app.use('/db', chatRouter);
+app.use((error,req,res,next) => {
+  const message = `error desconocido: ${error.message}`;
+  console.error(message);
+  res.status(500).json({message});
+  next();
+})
 
 app.engine("handlebars", engine())
 app.set('views', `${__dirname}views`);

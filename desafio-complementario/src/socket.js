@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import ProductManager from './ProductManager.js';
-
+import messageModel from "./dao/models/message.model.js";
 
 export const init = (httpServer) => {
     const socketServer = new Server(httpServer);
@@ -17,7 +17,14 @@ export const init = (httpServer) => {
         products.push(newProduct);
         socketClient.emit('product-list', products);
     });
-
+    
+    socketClient.on('clientMessage', async(message)=>{
+      console.log("message", message);
+      await messageModel.create(message);
+      const messages = await messageModel.find({});
+      console.log(messages);
+      emit('DBmessages', messages);
+    })
     });
 }
 
