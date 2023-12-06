@@ -23,7 +23,7 @@ export const init = (httpServer) => {
       await messageModel.create(message);
       const messages = await messageModel.find({});
       console.log(messages);
-      emit('DBmessages', messages);
+      socketClient.emit('DBmessages', messages);
     })
     });
 }
