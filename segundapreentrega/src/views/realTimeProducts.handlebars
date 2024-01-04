@@ -1,0 +1,81 @@
+<nav>
+  <ul>
+    <li><a href="#" class="secondary">…</a></li>
+  </ul>
+  <ul>
+    <li><strong>Geluk Store</strong></li>
+  </ul>
+  <ul>
+    <li><a href="#" class="secondary">…</a></li>
+  </ul>
+</nav>
+<h1>Nuevo Producto</h1>
+<form id="form-products">
+
+  <!-- Grid -->
+  <div class="grid">
+
+    <!-- Markup example 1: input is inside label -->
+    <label for="title">
+      Title
+      <input type="text" id="title" name="title" placeholder="title" required>
+    </label>
+
+    <label for="description">
+      Description
+      <input type="text" id="description" name="description" placeholder="description" required>
+    </label>
+
+  </div>
+
+  <div class="grid">
+
+    <!-- Markup example 1: input is inside label -->
+    <label for="price">
+      Price
+      <input type="text" id="price" name="price" placeholder="price" required>
+    </label>
+
+    <label for="thumbnail">
+      Thumbnail
+      <input type="file" id="thumbnail" name="thumbnail" placeholder="thumbnail">
+    </label>
+
+  </div>
+
+    <div class="grid">
+
+    <!-- Markup example 1: input is inside label -->
+    <label for="code">
+      Code
+      <input type="text" id="code" name="code" placeholder="codecode" required>
+    </label>
+
+    <label for="stock">
+      Stock
+      <input type="text" id="stock" name="stock" placeholder="stock" required>
+    </label>
+
+  </div>
+
+  <!-- Button -->
+  <button type="submit">Enviar</button>
+
+</form>
+
+<div id="log-products">
+    <h1>Lista de Productos</h1>
+    {{#each products}}
+        <div><b>Producto con codigo*{{this.code}}</b></div>
+        <ul>
+            <li>{{this.title}}</li>
+            <li>{{this.description}}</li>
+            <li>Precio: ${{this.price}}</li>
+            <li>Stock: {{this.stock}}</li>
+        </ul>
+    {{/each}}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/script.js"></script>
