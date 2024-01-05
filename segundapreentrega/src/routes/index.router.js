@@ -14,7 +14,29 @@ indexRouter.get('/productsmdb', async (req, res) =>{
         criterials.category = search;
     }
     const products = await productsModel.paginate(criterials,options);
-    res.status(200).json(products)
+    
+
+
+const buildResponse = (prods) => {
+    return {
+        status: 'succes',
+         payload: prods.docs.map((doc)=> doc.toJSON()),
+         totalPages: prods.totalPages,
+         prevPage: prods.prevPage,
+         nextPage: prods.nextPage,
+         page: prods.page,
+         hasPrevPage: prods.hasPrevPage,
+         hasNextPage: prods.hasNextPage,
+         prevLink: prods.hasPrevPage ? `http://localhost:8080/api/products?limit=${prods.limit}&page=${prods.prevPages}`: null,
+         nextLink: prods.hasNextPage ? `http://localhost:8080/api/products?limit=${prods.limit}&page=${prods.nextPage}`: null,
+    }
+
+}
+
+    const data = buildResponse({...products,sort,search});
+    console.log(data);
+    res.render('productsmdb' ,{...data,title: 'integracion de DB'});
+
 })
 
 export default indexRouter

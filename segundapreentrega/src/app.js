@@ -44,6 +44,12 @@ app.get('/realtimeproducts',async (req, res) => {
   res.render('realtimeproducts', { title: 'G Store👙', products});
   });
 
+  app.get('/products',async (req, res) => {
+    const productManager = new ProductManager()
+    const products = await productManager.getProducts();
+    res.render('products', { title: 'G Store👙', products});
+    });
+
 init(server)
 await initDb()
 
