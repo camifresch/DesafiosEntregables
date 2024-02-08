@@ -1,43 +1,83 @@
-<nav>
+<div><nav>
+
   <ul>
+
     <li><a href="#" class="secondary">…</a></li>
+
   </ul>
+
   <ul>
+
     <li><strong>Geluk Store</strong></li>
+
   </ul>
+
   <ul>
+
     <li><a href="#" class="secondary">…</a></li>
+
   </ul>
+
 </nav>
 
 <nav aria-label="Page navigation example">
+
   <ul class="pagination">
 
-    {{#if pagination.hasPrevPage}}
-      <a class="page-link" href="{{this.prevLink}}">Previous</a>
-    {{else}}
+    {{#if hasPrevPage}}
+
     <li class="page-item disabled" href="{{this.prevLink}}">
+
+      <a class="page-link" href="{{this.prevLink}}">Previous</a>
+
+    </li>
+
+    {{else}}
+
+    {{/if}}
+
+    {{#each pagination.pagesArray}}
+
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+
+    {{/each}}
+
+   {{#if hasNextPage}} <li class="page-item">
+
+      <a class="page-link" href={{this.nextLink}}>Next</a>
+
     </li>
 
     {{/if}}
-                
-    {{#each pagination.pagesArray}}
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item">
-      <a class="page-link" href={{this.nextLink}}>Next</a>
-    </li>
+
   </ul>
+
 </nav>
 
+{{#each payload}}
+
 <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
+
+  <img src={{this.thumbnail}} class="card-img-top" alt="...">
+
   <div class="card-body">
+
     <h5 class="card-title">{{this.title}}</h5>
+
     <p class="card-text">{{this.description}}</p>
+
     <p class="card-text">{{this.price}}</p>
-    <a onclick="addProduct('{{this._id}}')" href="#" class="btn btn-primary">Agregar al Carrito</a>
+
+    <button onclick="addProduct('{{this._id}}')"  class="btn btn-primary">Agregar al carrito </button>
+
   </div>
+
+</div>
+
+{{/each}}
+
 </div>
 
 <script src="/js/cart.js"></script>

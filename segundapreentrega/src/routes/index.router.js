@@ -27,15 +27,15 @@ const buildResponse = (prods) => {
          page: prods.page,
          hasPrevPage: prods.hasPrevPage,
          hasNextPage: prods.hasNextPage,
-         prevLink: prods.hasPrevPage ? `http://localhost:8080/api/products?limit=${prods.limit}&page=${prods.prevPages}`: null,
-         nextLink: prods.hasNextPage ? `http://localhost:8080/api/products?limit=${prods.limit}&page=${prods.nextPage}`: null,
+         prevLink: prods.hasPrevPage ? `http://localhost:8080/api/productsmdb?limit=${prods.limit}&page=${prods.prevPages}`: null,
+         nextLink: prods.hasNextPage ? `http://localhost:8080/api/productsmdb?limit=${prods.limit}&page=${prods.nextPage}`: null,
     }
 
 }
 
     const data = buildResponse({...products,sort,search});
     console.log(data);
-    res.render('productsmdb' ,{...data,title: 'integracion de DB'});
+    res.render('products' ,{...data,title: 'integracion de DB'});
 
 })
 
