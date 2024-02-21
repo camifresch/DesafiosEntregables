@@ -1,5 +1,6 @@
 import ProductManager from "./ProductManager.js"
 import fs from "fs"
+import cartsModel from "./dao/models/carts.model.js"
 
 const productAll = new ProductManager
 
@@ -40,17 +41,7 @@ class CartManager {
       }
 
     addCarts = async (newcart) => {
-        try {
-          const cart = await this.readCarts()
-          await cart.push(newcart)
-          this.writeCarts(cart)
-          return newcart;
-          } catch (err) {
-            return {
-              status: 500,
-              error: `Ocurrió un error al intentar crear el carrito: ${err}`,
-            };
-          }
+        return cartsModel.create(newcart)
         }
 
     getCartsById = async (id) => {

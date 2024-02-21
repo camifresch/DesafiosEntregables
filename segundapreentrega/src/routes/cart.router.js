@@ -6,13 +6,16 @@ import cartsModel from '../dao/models/carts.model.js';
 const cartRouter = Router()
 const carts = new CartManager();
 
-cartRouter.post('/carts', async (req, res) => {
-    const newCart = {
-        id: uuid(),
+cartRouter.post('/carts', async (req, res, next) => {
+try {
+    const carrito = {
         products: [],
     };
-    const respo = await carts.addCarts(newCart);
-    res.status(201).json(respo)
+ const respo = await carts.addCarts(carrito);
+ res.json(respo)
+} catch (error) {
+    next(error)
+}
 })
 
 cartRouter.get('/carts/:cid', async (req, res) => {
